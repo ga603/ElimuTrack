@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="bi bi-cloud-arrow-up"></i> Bulk Student Upload</h2>
+    <div class="card shadow-sm mt-3 border-0">
+        <div class="card-body">
+            <h5 class="text-primary fw-bold mb-3"><i class="bi bi-info-circle"></i> Instructions:</h5>
+            <ol class="text-muted mb-4">
+                <li>Open Microsoft Excel and create a spreadsheet with these exact 4 column headers: <strong>Adm No, Name, Class, Parent Phone</strong>.</li>
+                <li>Fill in your student data.</li>
+                <li>Go to <strong>File > Save As</strong> and choose <strong>CSV (Comma delimited) (*.csv)</strong>.</li>
+                <li>Upload that file below.</li>
+            </ol>
+            
+            <hr>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} shadow-sm fw-bold">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data" class="mt-4">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-dark">Select CSV File:</label>
+                    <input class="form-control form-control-lg border-success" type="file" name="student_file" accept=".csv" required>
+                </div>
+                <button type="submit" class="btn btn-success btn-lg shadow-sm">
+                    <i class="bi bi-upload"></i> Upload Students
+                </button>
+                <a href="{% url 'class_dashboard' %}" class="btn btn-outline-secondary btn-lg ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

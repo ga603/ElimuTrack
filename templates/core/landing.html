@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElimuTrack - Dundori Senior School</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-color: #012970; /* The deep blue from your screenshot */
+            --accent-color: #4154f1;  /* Brighter blue */
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f6f9ff; }
+        
+        /* Navbar */
+        .navbar { background-color: var(--primary-color); padding: 15px 0; }
+        .navbar-brand { color: white !important; font-weight: 700; font-size: 1.5rem; }
+        .nav-link { color: rgba(255,255,255,0.8) !important; font-weight: 500; }
+        .nav-link:hover { color: white !important; }
+
+        /* Hero Section */
+        .hero { padding: 80px 0; text-align: center; }
+        .hero h1 { color: var(--primary-color); font-weight: 800; font-size: 3rem; margin-bottom: 20px; }
+        .hero p { color: #444; font-size: 1.2rem; margin-bottom: 40px; }
+
+        /* Cards */
+        .access-card { 
+            border: none; 
+            border-radius: 10px; 
+            padding: 30px; 
+            background: white; 
+            box-shadow: 0px 5px 20px rgba(1, 41, 112, 0.1); 
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        .access-card:hover { transform: translateY(-5px); }
+        .icon-box { 
+            font-size: 3rem; 
+            color: var(--accent-color); 
+            margin-bottom: 20px; 
+        }
+        .btn-custom {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-custom:hover { background-color: var(--primary-color); color: white; }
+
+        /* Footer */
+        footer { background: #f6f9ff; padding: 30px 0; border-top: 1px solid #e0e5fa; text-align: center; color: #012970; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="bi bi-mortarboard-fill"></i> ElimuTrack</a>
+            <div class="ms-auto">
+                <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm px-4 rounded-pill">Staff Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1>Welcome to Dundori Senior School</h1>
+                <p>The Official Digital Management Portal. Streamlining Academics, Finance, and Communication for Excellence.</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4 g-4">
+            <div class="col-md-5 col-lg-4">
+                <div class="access-card">
+                    <div class="icon-box"><i class="bi bi-person-workspace"></i></div>
+                    <h3>Student & Parent Portal</h3>
+                    <p class="text-muted mb-4">Access e-learning materials, check fee balances, and pay via M-Pesa.</p>
+                    <a href="{% url 'student_portal' %}" class="btn-custom">Access Portal</a>
+                </div>
+            </div>
+
+            <div class="col-md-5 col-lg-4">
+                <div class="access-card">
+                    <div class="icon-box"><i class="bi bi-shield-lock"></i></div>
+                    <h3>Staff Administration</h3>
+                    <p class="text-muted mb-4">Restricted access for Teachers and Admin to manage records and results.</p>
+                    <a href="{% url 'login' %}" class="btn-custom">Staff Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p class="mb-1"><strong>Dundori Senior School</strong> | P.O. Box 13635, Nakuru 20100, Kenya</p>
+            <p class="small text-muted">&copy; Powered by <strong>ElimuTrack</strong> Systems.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

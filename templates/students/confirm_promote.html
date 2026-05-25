@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <div class="card shadow border-danger">
+            <div class="card-body p-5">
+                <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                <h2 class="mt-3">Promote {{ class_name }}?</h2>
+                <p class="lead text-muted">
+                    This will move ALL students in <strong>{{ class_name }}</strong> to the next grade level automatically.
+                </p>
+                <div class="alert alert-warning">
+                    <strong>Warning:</strong> This action cannot be easily undone.
+                </div>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-lg w-100">Yes, Promote Class</button>
+                    <a href="{% url 'single_class_view' class_name %}" class="btn btn-light w-100 mt-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

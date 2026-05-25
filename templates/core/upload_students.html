@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="bi bi-cloud-arrow-up"></i> Bulk Student Upload</h2>
+    <div class="card shadow-sm mt-3">
+        <div class="card-body">
+            <h5 class="text-danger">Instructions:</h5>
+            <p>1. Open Microsoft Excel and create a spreadsheet with these exact 4 column headers: <strong>Adm No, Name, Class, Parent Phone</strong>.</p>
+            <p>2. Fill in your students.</p>
+            <p>3. Go to File > Save As > Choose <strong>CSV (Comma delimited) (*.csv)</strong>.</p>
+            <p>4. Upload that file below.</p>
+            
+            <hr>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Select CSV File:</label>
+                    <input class="form-control" type="file" name="student_file" accept=".csv" required>
+                </div>
+                <button type="submit" class="btn btn-success">Upload Students</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

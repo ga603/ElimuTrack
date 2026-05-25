@@ -1,0 +1,2 @@
+echo "output/" >> .gitignore
+echo "__pycache__/" >> .gitignore

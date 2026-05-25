@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Record Fee Payment</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info d-flex align-items-center">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div>
+                        <strong>Student:</strong> {{ student.first_name }} {{ student.last_name }}<br>
+                        <strong>Adm No:</strong> {{ student.admission_number }}
+                    </div>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Amount Paid (KES)</label>
+                        <input type="number" name="amount" class="form-control form-control-lg" placeholder="e.g. 5000" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select name="method" class="form-select">
+                            <option value="MPESA">M-Pesa</option>
+                            <option value="BANK">Bank Deposit</option>
+                            <option value="CASH">Cash</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Transaction Reference / Receipt No.</label>
+                        <input type="text" name="ref" class="form-control" placeholder="e.g. QFH345JKS (M-Pesa Code)">
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Confirm Payment</button>
+                        <a href="{% url 'finance_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

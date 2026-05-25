@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold">{{ class_name }} <span class="text-muted fs-5">Manager</span></h2>
+        <a href="{% url 'class_dashboard' %}" class="btn btn-sm btn-outline-secondary">&larr; Back to Dashboard</a>
+    </div>
+    <div>
+        <a href="{% url 'promote_class' class_name %}" class="btn btn-danger">
+            <i class="bi bi-graph-up-arrow"></i> Promote Class
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    
+    <div class="col-md-4 mb-3 mb-md-0">
+        <div class="border shadow-sm p-3 bg-light rounded h-100 border-start border-success border-4">
+            <h6 class="text-muted fw-bold mb-3"><i class="bi bi-calendar-check text-success"></i> Attendance</h6>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'mark_attendance' class_name %}" class="btn btn-success btn-sm shadow-sm">
+                    <i class="bi bi-check2-square"></i> Mark Register
+                </a>
+                <a href="{% url 'export_attendance' class_name %}" class="btn btn-outline-success btn-sm shadow-sm bg-white">
+                    <i class="bi bi-file-earmark-excel"></i> Download Excel
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3 mb-md-0">
+        <div class="border shadow-sm p-3 bg-light rounded h-100 border-start border-primary border-4">
+            <h6 class="text-muted fw-bold mb-3"><i class="bi bi-journal-text text-primary"></i> Academics</h6>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'enter_marks' class_name %}" class="btn btn-primary btn-sm shadow-sm">
+                    <i class="bi bi-pencil-square"></i> Enter Marks
+                </a>
+                <a href="{% url 'bulk_report_cards' class_name %}" class="btn btn-outline-primary btn-sm shadow-sm bg-white">
+                    <i class="bi bi-printer"></i> Bulk Print
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="border shadow-sm p-3 bg-light rounded h-100 border-start border-info border-4">
+            <h6 class="text-muted fw-bold mb-3"><i class="bi bi-tools text-info"></i> Class Tools</h6>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'upload_material' class_name %}" class="btn btn-info btn-sm shadow-sm text-dark">
+                    <i class="bi bi-cloud-upload"></i> Upload Notes
+                </a>
+                <a href="#" class="btn btn-outline-secondary btn-sm shadow-sm bg-white">
+                    <i class="bi bi-chat-left-text"></i> SMS Parents
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="card shadow border-0">
+    <div class="card-header bg-dark text-white fw-bold"><i class="bi bi-people-fill me-2"></i> Enrolled Students</div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Photo</th> 
+                    <th>Adm No</th>
+                    <th>Name</th>
+                    <th>Parent Phone</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>
+                        {% if student.passport_photo %}
+                            <img src="{{ student.passport_photo.url }}" alt="Photo" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #e9ecef;">
+                        {% else %}
+                            <div style="width: 45px; height: 45px; background-color: #f0f2f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888;">No pic</div>
+                        {% endif %}
+                    </td>
+                    <td class="fw-bold">#{{ student.admission_number }}</td>
+                    <td>{{ student.first_name }} {{ student.last_name }}</td>
+                    <td>{{ student.parent_phone }}</td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="{% url 'student_detail' student.pk %}" class="btn btn-sm btn-outline-primary" title="View">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{% url 'edit_student' student.pk %}" class="btn btn-sm btn-outline-secondary" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{% url 'delete_student' student.pk %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-5 text-muted">
+                        <i class="bi bi-person-x fs-1 d-block mb-2"></i>
+                        No students registered in this class yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show shadow-sm fw-bold mb-4" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-primary"><i class="bi bi-cloud-upload"></i> Upload Notes</h2>
+        <p class="text-muted fs-5">Add new study materials for: <strong>{{ class_name }}</strong></p>
+    </div>
+    <div>
+        <button type="button" onclick="history.back()" class="btn btn-outline-secondary shadow-sm">
+            &larr; Back to {{ class_name }} Manager
+        </button>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow border-0">
+            <div class="card-body p-5">
+                
+               <form method="POST" action="{% url 'upload_material' class_name %}" enctype="multipart/form-data">
+    {% csrf_token %}
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Resource Title</label>
+                        <input type="text" class="form-control" name="title" placeholder="e.g., Chapter 1: Algebra Equations" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Subject</label>
+                        <select class="form-select" name="subject" required>
+                            <option value="">Select Subject...</option>
+                            <option value="Math">Mathematics</option>
+                            <option value="English">English</option>
+                            <option value="Science">Science</option>
+                            <option value="History">History</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Upload File (PDF, Word, or PowerPoint)</label>
+                        <input class="form-control" type="file" name="file">
+                        <div class="form-text">Optional: Maximum file size 10MB.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-danger"><i class="bi bi-youtube"></i> Video Lesson Link</label>
+                        <input type="url" class="form-control" name="video_link" placeholder="e.g., https://www.youtube.com/watch?v=...">
+                        <div class="form-text text-muted">Optional: Paste a YouTube or Zoom link.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Optional Instructions</label>
+                        <textarea class="form-control" name="description" rows="3" placeholder="Read pages 10-15..."></textarea>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">
+                            <i class="bi bi-cloud-arrow-up-fill"></i> Publish to {{ class_name }} Portal
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<style> .sidebar { display: none !important; } </style>
+
+<div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <i class="bi bi-lock-fill text-danger" style="font-size: 5rem;"></i>
+            <h1 class="fw-bold mt-3">Subscription Expired</h1>
+            <p class="text-muted fs-5">Your ElimuTrack termly license has ended. Your school's data is safe, but the system is locked.</p>
+            
+            {% if error %}
+            <div class="alert alert-danger fw-bold">{{ error }}</div>
+            {% endif %}
+
+            <div class="card shadow mt-4 border-danger">
+                <div class="card-body p-4">
+                    <h5 class="mb-3">Enter Renewal Key</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="license_key" class="form-control form-control-lg text-center mb-3 fw-bold" placeholder="e.g. ELIMU-30-A1B2C3" required>
+                        <button type="submit" class="btn btn-danger btn-lg w-100 fw-bold">Unlock System</button>
+                    </form>
+                    <p class="mt-3 mb-0 small text-muted">To purchase a renewal key, please M-Pesa the required amount and WhatsApp ElimuTrack Support at your number.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

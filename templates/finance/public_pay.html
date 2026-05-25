@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow border-0">
+            <div class="card-header bg-success text-white text-center py-3">
+                <h4 class="mb-0">M-Pesa Express Payment</h4>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-center text-muted">
+                    Initiating payment for student:<br>
+                    <strong>{{ student.first_name }} {{ student.last_name }} (#{{ student.admission_number }})</strong>
+                </p>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">M-Pesa Phone Number</label>
+                        <input type="text" name="phone" class="form-control form-control-lg" placeholder="07..." value="{{ student.parent_phone }}" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Amount to Pay (KES)</label>
+                        <input type="number" name="amount" class="form-control form-control-lg" placeholder="e.g. 5000" required>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            Simulate STK Push <i class="bi bi-arrow-right"></i>
+                        </button>
+                        <a href="{% url 'student_portal' %}" class="btn btn-light text-muted">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

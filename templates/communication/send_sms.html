@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-chat-dots"></i> Send Bulk SMS</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Target Audience</label>
+                        <select name="target_class" class="form-select" required>
+                            <option value="">-- Select Class --</option>
+                            <option value="ALL">All Parents (Entire School)</option>
+                            {% for cls in classes %}
+                                <option value="{{ cls }}">{{ cls }} Parents</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Message Category</label>
+                        <select name="purpose" class="form-select">
+                            <option value="GENERAL">General Announcement</option>
+                            <option value="FEES">Fee Reminder</option>
+                            <option value="EMERGENCY">Emergency</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Message Content</label>
+                        <textarea name="message" class="form-control" rows="4" placeholder="Type your message here..." required></textarea>
+                        <div class="form-text">Example: Dear Parent, please note that school closes on Friday.</div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-send"></i> Send Blast
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

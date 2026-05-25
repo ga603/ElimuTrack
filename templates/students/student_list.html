@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        <h2 class="fw-bold text-primary">Student Registry</h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="{% url 'add_student' %}" class="btn btn-success"><i class="bi bi-plus-lg"></i> Add Student</a>
+    </div>
+</div>
+
+<div class="card p-3 mb-4 shadow-sm">
+    <form method="GET" class="row g-2">
+        <div class="col-md-10">
+            <input type="text" name="q" class="form-control" placeholder="Search by Name or Admission Number..." value="{{ query|default:'' }}">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="card shadow-sm">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>Photo</th> <th>Adm No</th>
+                <th>Name</th>
+                <th>Class</th>
+                <th>System</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>
+                    {% if student.passport_photo %}
+                        <img src="{{ student.passport_photo.url }}" alt="Photo" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #e9ecef;">
+                    {% else %}
+                        <div style="width: 45px; height: 45px; background-color: #f0f2f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888;">No pic</div>
+                    {% endif %}
+                </td>
+                
+                <td class="fw-bold">#{{ student.admission_number }}</td>
+                <td>
+                    <a href="{% url 'student_detail' student.pk %}" class="text-decoration-none fw-bold">
+                        {{ student.first_name }} {{ student.last_name }}
+                    </a>
+                </td>
+                <td><span class="badge bg-secondary">{{ student.current_class }}</span></td>
+                <td>{{ student.curriculum }}</td>
+                <td>
+                    <a href="{% url 'student_detail' student.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center py-4 text-muted">No students found matching your search.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

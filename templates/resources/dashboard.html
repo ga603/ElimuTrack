@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-primary"><i class="bi bi-laptop"></i> E-Learning Hub</h2>
+        <p class="text-muted">Manage study materials, notes, and digital resources.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 border-start border-info border-4 h-100">
+            <div class="card-body">
+                <h6 class="text-muted fw-bold">Total Materials Uploaded</h6>
+                <h2 class="fw-bold mb-0">{{ materials|length }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="list-group list-group-flush">
+                    
+                    {% for material in materials %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center p-3">
+                        <div>
+                            <h6 class="mb-1 fw-bold">{{ material.title }}</h6>
+                            <small class="text-muted">
+                                Subject: <strong>{{ material.subject }}</strong> | 
+                                Class: <strong>{{ material.target_class }}</strong> | 
+                                Uploaded: {{ material.upload_date|date:"M d, Y" }}
+                            </small>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            
+                            {% if material.file %}
+                                <a href="{{ material.file.url }}" class="btn btn-sm btn-primary shadow-sm" target="_blank" title="Download Notes">
+                                    <i class="bi bi-download"></i>
+                                </a>
+                            {% endif %}
+                            
+                            {% if material.video_link %}
+                                <a href="{{ material.video_link }}" class="btn btn-sm btn-danger shadow-sm" target="_blank" title="Watch Video">
+                                    <i class="bi bi-youtube"></i>
+                                </a>
+                            {% endif %}
+                            
+                            <a href="{% url 'delete_material' material.id %}" class="btn btn-sm btn-outline-danger shadow-sm" onclick="return confirm('Are you sure you want to permanently delete this material?');" title="Delete Material">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    {% empty %}
+                    <div class="p-4 text-center text-muted">
+                        <i class="bi bi-folder-x fs-1 d-block mb-2"></i>
+                        No study materials have been uploaded yet.
+                    </div>
+                    {% endfor %}
+
+                </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

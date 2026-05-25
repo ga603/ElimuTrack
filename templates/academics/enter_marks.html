@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+       <a href="#" class="btn btn-sm btn-outline-secondary mb-2">
+            <i class="bi bi-arrow-left"></i> Back to Class Manager
+       </a>
+        <h2 class="fw-bold text-primary mb-0">Academic Results Engine - {{ current_class }}</h2>
+        <p class="text-muted mb-0">Subject: <strong>{{ subject.name }}</strong> | Term: <strong>{{ term.name }}</strong></p>
+    </div>
+    <button class="btn btn-outline-dark fw-bold shadow-sm" onclick="window.print()">
+        <i class="bi bi-printer"></i> Print Sheet
+    </button>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-dark text-white fw-bold">
+        <i class="bi bi-grid-3x3"></i> Quick Marks Entry
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered mb-0 align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Adm No</th>
+                        <th>Student Name</th>
+                        <th class="text-center">CAT 1 (30)</th>
+                        <th class="text-center">CAT 2 (30)</th>
+                        <th class="text-center">Exam (70)</th>
+                        <th class="text-center">Total (100)</th>
+                        <th class="text-center">Grade</th>
+                        <th class="text-center">Save Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for record in records %}
+                    <tr id="row-{{ record.id }}">
+                        <td class="text-center fw-bold text-secondary">{{ record.student.admission_number }}</td>
+                        <td class="fw-bold">{{ record.student.first_name }} {{ record.student.last_name }}</td>
+                        
+                        <td>
+                            <input type="number" 
+                                   class="form-control form-control-sm text-center fw-bold mark-input" 
+                                   data-record-id="{{ record.id }}" 
+                                   data-type="cat1" 
+                                   value="{{ record.cat_1|default_if_none:'' }}" 
+                                   max="30" min="0" placeholder="-">
+                        </td>
+                        
+                        <td>
+                            <input type="number" 
+                                   class="form-control form-control-sm text-center fw-bold mark-input" 
+                                   data-record-id="{{ record.id }}" 
+                                   data-type="cat2" 
+                                   value="{{ record.cat_2|default_if_none:'' }}" 
+                                   max="30" min="0" placeholder="-">
+                        </td>
+                        
+                        <td>
+                            <input type="number" 
+                                   class="form-control form-control-sm text-center fw-bold mark-input" 
+                                   data-record-id="{{ record.id }}" 
+                                   data-type="exam" 
+                                   value="{{ record.exam|default_if_none:'' }}" 
+                                   max="70" min="0" placeholder="-">
+                        </td>
+                        
+                        <td class="text-center fw-bold fs-5 text-primary total-cell">
+    {{ record.total_marks|default_if_none:'0'|floatformat:0 }}
+</td>
+                        
+                        <td class="text-center">
+                            <span class="badge bg-success fs-6 grade-cell shadow-sm">
+                                {{ record.grade|default_if_none:'-' }}
+                            </span>
+                        </td>
+                        
+                        <td class="text-center">
+                            <span class="status-indicator text-muted small fw-bold">
+                                <i class="bi bi-cloud-check"></i> Ready
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="bi bi-folder-x fs-1 d-block mb-2"></i>
+                            No students found in {{ current_class }}. Register a student first!
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Grab every single input box on the page
+    const inputs = document.querySelectorAll('.mark-input');
+
+    // 2. Listen for when a teacher types a number and clicks away
+    inputs.forEach(input => {
+        input.addEventListener('change', function() {
+            
+            // Find exactly which row we are working on
+            const recordId = this.getAttribute('data-record-id');
+            const row = document.getElementById(`row-${recordId}`);
+            
+            // Grab the numbers they just typed (default to 0 if they leave it blank)
+            const cat1 = row.querySelector('[data-type="cat1"]').value || 0;
+            const cat2 = row.querySelector('[data-type="cat2"]').value || 0;
+            const exam = row.querySelector('[data-type="exam"]').value || 0;
+            const statusIndicator = row.querySelector('.status-indicator');
+
+            // Show a yellow "Saving..." animation
+            statusIndicator.innerHTML = '<span class="text-warning"><i class="bi bi-arrow-repeat spin"></i> Saving...</span>';
+
+            // 3. Secretly send the data to Python in the background
+            fetch('{% url "save_marks_ajax" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Note: You will need your CSRF token setup here in production, 
+                    // assuming you bypassed it on the view for now!
+                },
+                body: JSON.stringify({
+                    'record_id': recordId,
+                    'cat_1': cat1,
+                    'cat_2': cat2,
+                    'exam': exam
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // 4. Update the Total and Grade instantly on the screen!
+                    row.querySelector('.total-cell').innerText = data.total;
+                    row.querySelector('.grade-cell').innerText = data.grade;
+                    
+                    // Show a green "Saved!" checkmark
+                    statusIndicator.innerHTML = '<span class="text-success"><i class="bi bi-check-circle-fill"></i> Saved!</span>';
+                    
+                    // Fade back to "Ready" after 2 seconds
+                    setTimeout(() => {
+                        statusIndicator.innerHTML = '<span class="text-muted"><i class="bi bi-cloud-check"></i> Ready</span>';
+                    }, 2000);
+                } else {
+    statusIndicator.innerHTML = '<span class="text-danger fw-bold"><i class="bi bi-bug"></i> ' + data.message + '</span>';
+}
+            })
+            .catch(error => {
+                statusIndicator.innerHTML = '<span class="text-danger"><i class="bi bi-wifi-off"></i> Offline</span>';
+            });
+        });
+    });
+</script>
+
+<style>
+    /* A quick CSS animation to make the saving icon spin! */
+    .spin { animation: spin 1s linear infinite; display: inline-block; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
+
+{% endblock %}
